@@ -22,7 +22,7 @@ function newGame() {
 	const deckUl = document.querySelector('.deck');
 
 	shuffledCards.forEach(function(card) {
-		deckCardHtml += `<li class="card match"><i class="${card}"></i></li>`;
+		deckCardHtml += `<li class="card"><i class="${card}"></i></li>`;
 	})
 
 	deckUl.innerHTML = deckCardHtml;
@@ -58,9 +58,36 @@ function shuffle(array) {
  */
 
 const deckClick = document.querySelector('.deck');
+let openCardArray = [];
 deckClick.addEventListener('click', function(e) {
-	console.log(e.target.parentElement, e.target.classList.value);
+	const target = e.target;
+console.log(target.parentElement, openCardArray);
+	/* event listener only response if the card is folded */
+	if (target.parentElement.classList.value === 'card') {
+		target.parentElement.classList.add('open', 'show');
+		openCardArray.push(target);
+		if (openCardArray.length === 2) {		
+			const [card_1, card_2] = openCardArray;
+			setTimeout(function() {matchOrNot(card_1, card_2)}, 1000);
+		}
+	}	
 })
+
+function matchOrNot(a, b) {
+	if (a.classList.value === b.classList.value) {
+console.log('same');
+				a.parentElement.classList.add('match');
+				b.parentElement.classList.add('match');
+				a.parentElement.classList.remove('open', 'show');
+				b.parentElement.classList.remove('open', 'show');
+			} else {
+console.log('different');
+				a.parentElement.classList.remove('open', 'show');
+				b.parentElement.classList.remove('open', 'show');
+}
+	openCardArray = [];
+
+}
 
 /*
 * set up event listener for restart the game
