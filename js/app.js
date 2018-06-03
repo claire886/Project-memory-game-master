@@ -7,6 +7,9 @@ const initialCards = ['fa fa-paper-plane-o', 'fa fa-paper-plane-o', 'fa fa-ancho
 					 'fa fa-diamond', 'fa fa-diamond', 'fa fa-bomb', 'fa fa-bomb',
 					 'fa fa-bolt', 'fa fa-bolt', 'fa fa-cube', 'fa fa-cube'];
 
+var moves = 0;
+var matchCount = 0;
+var movesEl = document.querySelector('.moves');
 newGame();
 
 
@@ -28,6 +31,12 @@ function newGame() {
 	deckUl.innerHTML = deckCardHtml;
 }
 
+function resetGame() {
+	newGame();
+	moves = 0;
+	matchCount = 0;
+	movesEl.textContent = moves;
+}
 
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -61,32 +70,38 @@ const deckClick = document.querySelector('.deck');
 let openCardArray = [];
 deckClick.addEventListener('click', function(e) {
 	const target = e.target;
-console.log(target.parentElement, openCardArray);
 	/* event listener only response if the card is folded */
 	if (target.parentElement.classList.value === 'card') {
+		moves++;
+		movesEl.textContent = moves;
 		target.parentElement.classList.add('open', 'show');
 		openCardArray.push(target);
 		if (openCardArray.length === 2) {		
 			const [card_1, card_2] = openCardArray;
-			setTimeout(function() {matchOrNot(card_1, card_2)}, 1000);
+			setTimeout(function() {matchOrNot(card_1, card_2)}, 400);
 		}
 	}	
 })
 
 function matchOrNot(a, b) {
 	if (a.classList.value === b.classList.value) {
-console.log('same');
-				a.parentElement.classList.add('match');
-				b.parentElement.classList.add('match');
-				a.parentElement.classList.remove('open', 'show');
-				b.parentElement.classList.remove('open', 'show');
-			} else {
-console.log('different');
-				a.parentElement.classList.remove('open', 'show');
-				b.parentElement.classList.remove('open', 'show');
+		matchCount++;	
+		a.parentElement.classList.add('match');
+		b.parentElement.classList.add('match');
+		a.parentElement.classList.remove('open', 'show');
+		b.parentElement.classList.remove('open', 'show');
+		if (matchCount === 8) {
+			congrats();
+		}	
+	} else {
+		a.parentElement.classList.remove('open', 'show');
+		b.parentElement.classList.remove('open', 'show');
 }
 	openCardArray = [];
+}
 
+function congrats() {
+	alert("Congratulations!!")
 }
 
 /*
@@ -95,4 +110,4 @@ console.log('different');
 */
 
 const restartDiv = document.querySelector('.restart');
-restartDiv.addEventListener('click', newGame);
+restartDiv.addEventListener('click', resetGame);
