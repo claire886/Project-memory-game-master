@@ -12,6 +12,8 @@ var matchCount = 0;
 var movesEl = document.querySelector('.moves');
 var starsEl = document.querySelector('.stars');
 var starCount = 0;
+var congratModalEl = document.querySelector('.congratModal');
+
 newGame();
 
 
@@ -30,8 +32,6 @@ function newGame() {
 	/* initial rating: three stars */
 	starCount = 0;
 	initialStars();
-console.log('initial..');
-console.log(starsEl);			
 	
 	shuffledCards.forEach(function(card) {
 		deckCardHtml += `<li class="card"><i class="${card}"></i></li>`;
@@ -45,6 +45,7 @@ function resetGame() {
 	moves = 0;
 	matchCount = 0;
 	movesEl.textContent = moves;
+	congratModalEl.removeChild(congratModalEl.firstChild);
 }
 
 
@@ -97,7 +98,6 @@ deckClick.addEventListener('click', function(e) {
 		}
 
 		if (moves === 25 || moves === 33) {
-console.log(moves + '..');			
 			starCount++;			
 			starsRating(starCount);
 		}
@@ -121,7 +121,7 @@ function matchOrNot(a, b) {
 		b.parentElement.classList.remove('open', 'show');
 		if (matchCount === 8) {
 			const time = timeUsed();
-			congrats();			
+			congrats(time);			
 		}	
 	} else {
 		a.parentElement.classList.remove('open', 'show');
@@ -131,8 +131,6 @@ function matchOrNot(a, b) {
 }
 
 function starsRating(s) {
-console.log(starsEl);
-console.log(starsEl.firstChild);
 	starsEl.removeChild(starsEl.firstChild);
 }
 
@@ -142,8 +140,17 @@ function timeUsed() {
 	return timeSeconds.toFixed(2);
 }
 
-function congrats() {
-	alert("Congratulations!!")
+function congrats(t) {
+	let modalHtml = '';
+	const starComment = ['Your are superb!', 'You are brilliant!', 'You are great!'];
+	let starResult = ((3 - starCount) > 1) ? (3 - starCount) + ' stars' : (3 - starCount) + ' star';
+	let comment = `Congratulation! You completed the game in ${t} seconds. You got ${starResult}. ${starComment[starCount]}`;
+
+	modalHtml = `<div class='result'>${comment}</div><button>New Game</button>`
+	congratModalEl.innerHTML = modalHtml;
+
+	const buttonEl = document.querySelector('button');
+	buttonEl.addEventListener('click', resetGame);
 }
 
 /*
