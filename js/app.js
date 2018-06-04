@@ -12,7 +12,7 @@ var matchCount = 0;
 var movesEl = document.querySelector('.moves');
 var starsEl = document.querySelector('.stars');
 var starCount = 0;
-var congratModalEl = document.querySelector('.congratModal');
+var congratModalEl = document.querySelector('.congrat-modal');
 
 newGame();
 
@@ -45,7 +45,7 @@ function resetGame() {
 	moves = 0;
 	matchCount = 0;
 	movesEl.textContent = moves;
-	congratModalEl.removeChild(congratModalEl.firstChild);
+	congratModalEl.style.display = 'none';
 }
 
 
@@ -144,13 +144,22 @@ function congrats(t) {
 	let modalHtml = '';
 	const starComment = ['Your are superb!', 'You are brilliant!', 'You are great!'];
 	let starResult = ((3 - starCount) > 1) ? (3 - starCount) + ' stars' : (3 - starCount) + ' star';
-	let comment = `Congratulation! You completed the game in ${t} seconds. You got ${starResult}. ${starComment[starCount]}`;
+	let comment = `Congratulation! You completed the game in ${t} seconds and ${moves} moves. You got ${starResult}. ${starComment[starCount]}`;
 
-	modalHtml = `<div class='result'>${comment}</div><button>New Game</button>`
+	modalHtml = `<div class='result'>${comment}</div><button class='close'>close</button><button class='newGame'>New Game</button>`
 	congratModalEl.innerHTML = modalHtml;
 
-	const buttonEl = document.querySelector('button');
-	buttonEl.addEventListener('click', resetGame);
+	const newGameButton = document.querySelector('.newGame');
+	newGameButton.addEventListener('click', resetGame);
+
+	const closeButton = document.querySelector('.close');
+	closeButton.addEventListener('click', close);
+
+	congratModalEl.style.display = 'block';
+}
+
+function close() {
+	congratModalEl.style.display = 'none';	
 }
 
 /*
