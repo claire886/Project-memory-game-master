@@ -10,6 +10,8 @@ const initialCards = ['fa fa-paper-plane-o', 'fa fa-paper-plane-o', 'fa fa-ancho
 var moves = 0;
 var matchCount = 0;
 var movesEl = document.querySelector('.moves');
+var starsEl = document.querySelector('.stars');
+var starCount = 0;
 newGame();
 
 
@@ -20,10 +22,17 @@ newGame();
  *   - add each card's HTML to the page
  */
 function newGame() {
+	let starsHtml = '';
 	let shuffledCards = shuffle(initialCards);
 	let deckCardHtml = '';
 	const deckUl = document.querySelector('.deck');
 
+	/* initial rating: three stars */
+	starCount = 0;
+	initialStars();
+console.log('initial..');
+console.log(starsEl);			
+	
 	shuffledCards.forEach(function(card) {
 		deckCardHtml += `<li class="card"><i class="${card}"></i></li>`;
 	})
@@ -38,6 +47,14 @@ function resetGame() {
 	movesEl.textContent = moves;
 }
 
+
+function initialStars() {	
+	let starsHtml = '';
+	for (i = 0; i < 3; i++) {
+		starsHtml += '<li><i class="fa fa-star"></i></li>';
+	}
+	starsEl.innerHTML = starsHtml;
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -68,11 +85,23 @@ function shuffle(array) {
 
 const deckClick = document.querySelector('.deck');
 let openCardArray = [];
+var startTime;
 deckClick.addEventListener('click', function(e) {
 	const target = e.target;
 	/* event listener only response if the card is folded */
 	if (target.parentElement.classList.value === 'card') {
 		moves++;
+		
+		if (moves === 1) {
+			startTime = new Date();
+		}
+
+		if (moves === 25 || moves === 33) {
+console.log(moves + '..');			
+			starCount++;			
+			starsRating(starCount);
+		}
+
 		movesEl.textContent = moves;
 		target.parentElement.classList.add('open', 'show');
 		openCardArray.push(target);
@@ -91,13 +120,26 @@ function matchOrNot(a, b) {
 		a.parentElement.classList.remove('open', 'show');
 		b.parentElement.classList.remove('open', 'show');
 		if (matchCount === 8) {
-			congrats();
+			const time = timeUsed();
+			congrats();			
 		}	
 	} else {
 		a.parentElement.classList.remove('open', 'show');
 		b.parentElement.classList.remove('open', 'show');
 }
 	openCardArray = [];
+}
+
+function starsRating(s) {
+console.log(starsEl);
+console.log(starsEl.firstChild);
+	starsEl.removeChild(starsEl.firstChild);
+}
+
+function timeUsed() {
+	const endTime = new Date();
+	const timeSeconds = (endTime - startTime) / 1000;
+	return timeSeconds.toFixed(2);
 }
 
 function congrats() {
