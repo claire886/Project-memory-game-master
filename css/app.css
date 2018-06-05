@@ -84,16 +84,10 @@ h1 {
 
 /*
 * add padding for <i> to make <i> and <li> are the same size,
-* so that when user click a card, the event target is always <i> 
-* and avoid <li> to be clicked 
+* so that when user click a card, the event target is always <i> rather than <li> 
 */
 .deck .card i {
    padding: 62.5px;
-}
-
-/* when card is open, font-size is 33px, so padding space need to be reduced */
-.deck .open i {
-   padding: calc((100% - 33px) / 2);
 }
 
 /*
@@ -160,4 +154,3 @@ button {
     padding: 3px;
     margin: 10px;
 }
-

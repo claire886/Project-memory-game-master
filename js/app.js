@@ -7,12 +7,11 @@ const initialCards = ['fa fa-paper-plane-o', 'fa fa-paper-plane-o', 'fa fa-ancho
 					 'fa fa-diamond', 'fa fa-diamond', 'fa fa-bomb', 'fa fa-bomb',
 					 'fa fa-bolt', 'fa fa-bolt', 'fa fa-cube', 'fa fa-cube'];
 
-var moves = 0;
-var matchCount = 0;
-var movesEl = document.querySelector('.moves');
+var moves = 0;	// count of moves
+var matchCount = 0;	// count pairs of match
+var movesEl = document.querySelector('.moves');	
 var starsEl = document.querySelector('.stars');
-var starCount = 0;
-var congratModalEl = document.querySelector('.congrat-modal');
+var congratModalEl = document.querySelector('.congrat-modal'); /* showing congratulation model when gmae is completed */
 
 newGame();
 
@@ -24,22 +23,37 @@ newGame();
  *   - add each card's HTML to the page
  */
 function newGame() {
-	let starsHtml = '';
 	let shuffledCards = shuffle(initialCards);
 	let deckCardHtml = '';
-	const deckUl = document.querySelector('.deck');
+	const deckEl = document.querySelector('.deck');
 
-	/* initial rating: three stars */
-	starCount = 0;
+	// initial rating: three stars
 	initialStars();
 	
+	// setting cards for a new game
 	shuffledCards.forEach(function(card) {
 		deckCardHtml += `<li class="card"><i class="${card}"></i></li>`;
 	})
-
-	deckUl.innerHTML = deckCardHtml;
+	deckEl.innerHTML = deckCardHtml;
 }
 
+/*
+* set up event listener for restart the game
+*  -if user click the restart sign, all the cards will be folded and shuffled
+*/
+const restartDiv = document.querySelector('.restart');
+restartDiv.addEventListener('click', resetGame);
+
+// display 3 stars in score panel 
+function initialStars() {	
+	let starsHtml = '';
+	for (i = 0; i < 3; i++) {
+		starsHtml += '<li><i class="fa fa-star"></i></li>';
+	}
+	starsEl.innerHTML = starsHtml;
+}
+
+// reset game or play again
 function resetGame() {
 	newGame();
 	moves = 0;
@@ -48,14 +62,6 @@ function resetGame() {
 	congratModalEl.style.display = 'none';
 }
 
-
-function initialStars() {	
-	let starsHtml = '';
-	for (i = 0; i < 3; i++) {
-		starsHtml += '<li><i class="fa fa-star"></i></li>';
-	}
-	starsEl.innerHTML = starsHtml;
-}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -84,34 +90,44 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-const deckClick = document.querySelector('.deck');
-let openCardArray = [];
-var startTime;
-deckClick.addEventListener('click', function(e) {
+const deckClickEl = document.querySelector('.deck');
+let openCardArray = [];	// put cards that are open and waiting for checking into this array
+var startTime;	// for recording starting time
+var starCount = 0;	// count of stars reduced
+
+deckClickEl.addEventListener('click', function(e) {
 	const target = e.target;
-	/* event listener only response if the card is folded */
+	// event listener only response if the card is folded, which means the class only has a attribute value of 'card'
 	if (target.parentElement.classList.value === 'card') {
 		moves++;
-		
+		// recode the time when first move occurred
 		if (moves === 1) {
 			startTime = new Date();
 		}
-
-		if (moves === 25 || moves === 33) {
+		// when move count reaches 27 or 35, one star is substracted from rating stars
+		if (moves === 27 || moves === 35) {
 			starCount++;			
-			starsRating(starCount);
+			starsRating();
 		}
 
-		movesEl.textContent = moves;
-		target.parentElement.classList.add('open', 'show');
+		movesEl.textContent = moves;	// update moves used in score panel
+		target.parentElement.classList.add('open', 'show'); // mark clicked card as open and show
 		openCardArray.push(target);
-		if (openCardArray.length === 2) {		
+		// if two card are in opened card array, check if they are mateched
+		if (openCardArray.length === 2) {
 			const [card_1, card_2] = openCardArray;
-			setTimeout(function() {matchOrNot(card_1, card_2)}, 400);
+			// dealy 0.4 sec to excute match function, otherwise the cards would looks like never opened when they are not matched
+			setTimeout(function() {matchOrNot(card_1, card_2)}, 400);	 
 		}
 	}	
 })
 
+// remove a star from score panel
+function starsRating() {
+	starsEl.removeChild(starsEl.firstChild);
+}
+
+// checking if the cards in open array are matched
 function matchOrNot(a, b) {
 	if (a.classList.value === b.classList.value) {
 		matchCount++;	
@@ -119,6 +135,7 @@ function matchOrNot(a, b) {
 		b.parentElement.classList.add('match');
 		a.parentElement.classList.remove('open', 'show');
 		b.parentElement.classList.remove('open', 'show');
+		// if all 8 pairs of cards are matched: 1. record time to calculate how much time is used 2. display congratulation modal
 		if (matchCount === 8) {
 			const time = timeUsed();
 			congrats(time);			
@@ -130,42 +147,36 @@ function matchOrNot(a, b) {
 	openCardArray = [];
 }
 
-function starsRating(s) {
-	starsEl.removeChild(starsEl.firstChild);
-}
-
+// calculate how much time is used to finish the game
 function timeUsed() {
 	const endTime = new Date();
 	const timeSeconds = (endTime - startTime) / 1000;
 	return timeSeconds.toFixed(2);
 }
 
+// build and display congratulation modal
 function congrats(t) {
 	let modalHtml = '';
+	// give different comment according to the number of star the user got
 	const starComment = ['Your are superb!', 'You are brilliant!', 'You are great!'];
+	// calculate how many stars the user got
 	let starResult = ((3 - starCount) > 1) ? (3 - starCount) + ' stars' : (3 - starCount) + ' star';
 	let comment = `Congratulation! You completed the game in ${t} seconds and ${moves} moves. You got ${starResult}. ${starComment[starCount]}`;
-
-	modalHtml = `<div class='result'><p>${comment}</p><button class='close'>Close</button><button class='newGame'>New Game</button></div>`
+	// build innerHTML for modal section
+	modalHtml = `<div class='result'><p>${comment}</p><button class='close'>Close</button><button class='newGame'>Play Again</button></div>`
 	congratModalEl.innerHTML = modalHtml;
-
+	// button for play agin
 	const newGameButton = document.querySelector('.newGame');
 	newGameButton.addEventListener('click', resetGame);
-
+	// button for close congratulation modal
 	const closeButton = document.querySelector('.close');
 	closeButton.addEventListener('click', close);
-
+	// showing congratulation modal
 	congratModalEl.style.display = 'flex';
 }
 
+// when close button is clicked, congratulation modal will be gone
 function close() {
 	congratModalEl.style.display = 'none';	
 }
 
-/*
-* set up event listener for restart the game
-*  -if user click the restart sign, all the cards will be folded and shuffled
-*/
-
-const restartDiv = document.querySelector('.restart');
-restartDiv.addEventListener('click', resetGame);
