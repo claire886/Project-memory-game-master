@@ -11,6 +11,9 @@ var moves = 0;	// count of moves
 var matchCount = 0;	// count pairs of match
 var movesEl = document.querySelector('.moves');	
 var starsEl = document.querySelector('.stars');
+var timePassed = 0;
+var myTimer;
+const timerEl = document.querySelector('.timer');
 var congratModalEl = document.querySelector('.congrat-modal'); /* showing congratulation model when gmae is completed */
 
 newGame();
@@ -58,8 +61,11 @@ function resetGame() {
 	newGame();
 	moves = 0;
 	matchCount = 0;
+	timePassed = 0;
 	movesEl.textContent = moves;
+	timerEl.textContent = timePassed;
 	congratModalEl.style.display = 'none';
+	clearInterval(myTimer);
 }
 
 
@@ -103,6 +109,7 @@ deckClickEl.addEventListener('click', function(e) {
 		// recode the time when first move occurred
 		if (moves === 1) {
 			startTime = new Date();
+			myTimer = setInterval(timer, 1000); // time passed in seconds after starting the game
 		}
 		// when move count reaches 27 or 35, one star is substracted from rating stars
 		if (moves === 27 || moves === 35) {
@@ -122,6 +129,12 @@ deckClickEl.addEventListener('click', function(e) {
 	}	
 })
 
+// display how many seconds passed in score panel
+function timer() {
+	timePassed++;
+	timerEl.textContent = timePassed;
+}
+
 // remove a star from score panel
 function starsRating() {
 	starsEl.removeChild(starsEl.firstChild);
@@ -138,7 +151,8 @@ function matchOrNot(a, b) {
 		// if all 8 pairs of cards are matched: 1. record time to calculate how much time is used 2. display congratulation modal
 		if (matchCount === 8) {
 			const time = timeUsed();
-			congrats(time);			
+			clearInterval(myTimer);
+			congrats(timePassed);			
 		}	
 	} else {
 		a.parentElement.classList.remove('open', 'show');
