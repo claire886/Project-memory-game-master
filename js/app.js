@@ -104,7 +104,7 @@ var starCount = 0;	// count of stars reduced
 deckClickEl.addEventListener('click', function(e) {
 	const target = e.target;
 	// event listener only response if the card is folded, which means the class only has a attribute value of 'card'
-	if (target.parentElement.classList.value === 'card') {
+	if (target.parentElement.classList.value === 'card' && openCardArray.length < 2) {
 		moves++;
 		// recode the time when first move occurred
 		if (moves === 1) {
