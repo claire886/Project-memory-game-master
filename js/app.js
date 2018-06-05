@@ -146,7 +146,7 @@ function congrats(t) {
 	let starResult = ((3 - starCount) > 1) ? (3 - starCount) + ' stars' : (3 - starCount) + ' star';
 	let comment = `Congratulation! You completed the game in ${t} seconds and ${moves} moves. You got ${starResult}. ${starComment[starCount]}`;
 
-	modalHtml = `<div class='result'>${comment}</div><button class='close'>close</button><button class='newGame'>New Game</button>`
+	modalHtml = `<div class='result'><p>${comment}</p><button class='close'>Close</button><button class='newGame'>New Game</button></div>`
 	congratModalEl.innerHTML = modalHtml;
 
 	const newGameButton = document.querySelector('.newGame');
@@ -155,7 +155,7 @@ function congrats(t) {
 	const closeButton = document.querySelector('.close');
 	closeButton.addEventListener('click', close);
 
-	congratModalEl.style.display = 'block';
+	congratModalEl.style.display = 'flex';
 }
 
 function close() {
