@@ -2,19 +2,18 @@
  * Create a list that holds all of your cards
  */
 
-const initialCards = ['fa fa-paper-plane-o', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-anchor',
-					 'fa fa-leaf', 'fa fa-leaf', 'fa fa-bicycle',  'fa fa-bicycle',
-					 'fa fa-diamond', 'fa fa-diamond', 'fa fa-bomb', 'fa fa-bomb',
-					 'fa fa-bolt', 'fa fa-bolt', 'fa fa-cube', 'fa fa-cube'];
+const cardSymbol = ['fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-leaf', 'fa fa-bicycle',
+					'fa fa-diamond', 'fa fa-bomb', 'fa fa-bolt', 'fa fa-cube'];
+const initialCards = cardSymbol.concat(cardSymbol);
 
-var moves = 0;	// count of moves
-var matchCount = 0;	// count pairs of match
-var movesEl = document.querySelector('.moves');	
-var starsEl = document.querySelector('.stars');
-var timePassed = 0;
-var myTimer;
+let moves = 0;	// count of moves
+let matchCount = 0;	// count pairs of match
+const movesEl = document.querySelector('.moves');	
+const starsEl = document.querySelector('.stars');
+let timePassed = 0;
+let myTimer;
 const timerEl = document.querySelector('.timer');
-var congratModalEl = document.querySelector('.congrat-modal'); /* showing congratulation model when gmae is completed */
+const congratModalEl = document.querySelector('.congrat-modal'); /* showing congratulation model when gmae is completed */
 
 newGame();
 
@@ -62,6 +61,8 @@ function resetGame() {
 	moves = 0;
 	matchCount = 0;
 	timePassed = 0;
+	starCount = 0;
+	openCardArray = [];
 	movesEl.textContent = moves;
 	timerEl.textContent = timePassed;
 	congratModalEl.style.display = 'none';
@@ -71,7 +72,7 @@ function resetGame() {
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    let currentIndex = array.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -98,8 +99,8 @@ function shuffle(array) {
 
 const deckClickEl = document.querySelector('.deck');
 let openCardArray = [];	// put cards that are open and waiting for checking into this array
-var startTime;	// for recording starting time
-var starCount = 0;	// count of stars reduced
+let startTime;	// for recording starting time
+let starCount = 0;	// count of stars reduced
 
 deckClickEl.addEventListener('click', function(e) {
 	const target = e.target;
