@@ -21,8 +21,8 @@ The game ends once all cards have been correctly matched.
 
 ## Dependencies
 
--https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css
--https://fonts.googleapis.com/css?family=Coda
+- https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css
+- https://fonts.googleapis.com/css?family=Coda
 
 ## Contributing
 
