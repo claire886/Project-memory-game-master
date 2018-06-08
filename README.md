@@ -3,6 +3,7 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
+* [Dependencies](#dependencies)
 * [Contributing](#contributing)
 
 ## Instructions
@@ -17,6 +18,11 @@ The player then turns over a second card, trying to find the corresponding card 
 If the cards match, both cards stay flipped over.
 If the cards do not match, both cards are flipped face down.
 The game ends once all cards have been correctly matched.
+
+## Dependencies
+
+- https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css
+- https://fonts.googleapis.com/css?family=Coda
 
 ## Contributing
 
